@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,6 +40,17 @@ public class SampleController {
         return IntStream.range(1,10)
                 .mapToObj(i -> new SampleVO(i, i + " First ", i + " Last ")
                 ).collect(Collectors.toList());
+
+    }
+    
+    @GetMapping("/getMap")
+    public Map<String, SampleVO> getMap() {
+
+        Map<String, SampleVO> map = new HashMap<>();
+
+        map.put("First", new SampleVO(111,"성2", "이름2"));
+
+        return map;
 
     }
 
