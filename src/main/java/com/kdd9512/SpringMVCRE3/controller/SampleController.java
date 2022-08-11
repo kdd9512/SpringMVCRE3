@@ -3,6 +3,7 @@ package com.kdd9512.SpringMVCRE3.controller;
 import com.kdd9512.domain.SampleVO;
 import com.kdd9512.domain.Ticket;
 import lombok.extern.log4j.Log4j;
+import org.apache.log4j.PropertyConfigurator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
