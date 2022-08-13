@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.kdd9512.mapper.BoardMapper">
-    <select id="getList" resultType="org.kdd9512.domain.BoardVO">
+<mapper namespace="com.kdd9512.SpringMVCRE3.mapper.BoardMapper">
+    <select id="getList" resultType="com.kdd9512.SpringMVCRE3.domain.BoardVO">
         <![CDATA[
         select *
         from tbl_board
@@ -32,7 +32,7 @@
             where bno = #{bno}
     </update>
 
-    <select id="read" resultType="org.kdd9512.domain.BoardVO">
+    <select id="read" resultType="com.kdd9512.SpringMVCRE3.domain.BoardVO">
         select *
         from tbl_board
         where bno = #{bno}
@@ -72,7 +72,7 @@
     where 절을 trim/foreach 로 처리. 지정한 조건에 맞게 where 절을 선택하여 사용하게 한다.
     typeArr 는 Criteria 에서 만들었던 getTypeArr() 에서 값을 가져온다
     -->
-    <select id="getListWithPaging" resultType="org.kdd9512.domain.BoardVO">
+    <select id="getListWithPaging" resultType="com.kdd9512.SpringMVCRE3.domain.BoardVO">
         <![CDATA[
             select bno, title, content,writer ,regdate, updatedate
             from (
