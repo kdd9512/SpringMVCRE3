@@ -1,4 +1,4 @@
-package com.kdd9512.domain;
+package com.kdd9512.SpringMVCRE3.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
