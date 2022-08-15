@@ -1,5 +1,6 @@
 package com.kdd9512.SpringMVCRE3.mapper;
 
+import com.kdd9512.SpringMVCRE3.domain.Criteria;
 import com.kdd9512.SpringMVCRE3.domain.ReplyVO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 @RunWith(SpringRunner.class)
@@ -58,6 +60,31 @@ public class ReplyMapperTests {
         Long targetRno = 10L;
 
         mapper.delete(targetRno);
+
+    }
+
+    @Test
+    public void testUpdate(){
+
+        Long targetRno = 7L;
+
+        ReplyVO vo = mapper.read(targetRno);
+
+        vo.setReply("Updated reply....");
+
+        int cnt = mapper.update(vo);
+
+        log.info("UPDATE COUNT : " + cnt);
+    }
+
+    @Test
+    public void testList(){
+
+        Criteria cri = new Criteria();
+        // bnoArr[0] = 3L 이므로 3번 글이 가지고 있는 reply 를 전부 가져온다.
+        List<ReplyVO> replies = mapper.getListWithPaging(cri, bnoArr[0]);
+
+        replies.forEach(log::info);
 
     }
 

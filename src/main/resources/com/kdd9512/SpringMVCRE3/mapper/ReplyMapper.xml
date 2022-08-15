@@ -6,22 +6,50 @@
     <!-- 새 댓글을 삽입한다. -->
     <insert id="insert">
         <![CDATA[
-            insert into tbl_reply (rno, bno, reply, replier)
-            values (seq_reply.nextval, #{bno}, #{reply},#{replier})
+        insert into tbl_reply (rno, bno, reply, replier)
+        values (seq_reply.nextval, #{bno}, #{reply}, #{replier})
         ]]>
     </insert>
 
     <!-- 특정 댓글을 조회한다. 결과값 ReplyVO-->
     <select id="read" resultType="com.kdd9512.SpringMVCRE3.domain.ReplyVO">
         <![CDATA[
-            select * from tbl_reply where rno = #{rno}
+        select *
+        from tbl_reply
+        where rno = #{rno}
         ]]>
     </select>
 
     <delete id="delete">
         <![CDATA[
-            delete from tbl_reply where rno = #{rno}
+        delete
+        from tbl_reply
+        where rno = #{rno}
         ]]>
     </delete>
+
+    <update id="update">
+        <![CDATA[
+        update
+            tbl_reply
+        set reply      = #{reply},
+            updatedate = sysdate
+        where rno = #{rno}
+        ]]>
+    </update>
+
+    <select id="getListWithPaging" resultType="com.kdd9512.SpringMVCRE3.domain.ReplyVO">
+        <![CDATA[
+        select rno,
+               bno,
+               reply,
+               replier,
+               replyDate,
+               updateDate
+        from tbl_reply
+        where bno = #{bno}
+        order by rno asc
+        ]]>
+    </select>
 
 </mapper>
