@@ -63,8 +63,25 @@
     <%-- panel --%>
 </div>
 <%-- /.row --%>
+
+<script type="text/javascript" src="/resources/js/reply.js"></script>
+<script>
+
+    // bno 값
+    let bnoValue = '<c:out value="${board.bno}"/>';
+
+    // replyService.add() 테스트용.
+    replyService.add(
+        {reply: "TEST REPL", replier: "TEST REPLIER", bno: bnoValue},
+        function (result) {
+            alert("RESULT : " + result);
+        }
+    );
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
+
        let operForm = $("#operForm");
 
        $("button[data-oper='modify']").on("click", function (e) {
