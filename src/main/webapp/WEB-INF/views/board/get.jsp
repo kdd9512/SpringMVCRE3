@@ -71,12 +71,34 @@
     let bnoValue = '<c:out value="${board.bno}"/>';
 
     // replyService.add() 테스트용.
-    replyService.add(
-        {reply: "TEST REPL", replier: "TEST REPLIER", bno: bnoValue},
-        function (result) {
-            alert("RESULT : " + result);
+    <%-- replyService.add(
+            {reply: "TEST REPL", replier: "TEST REPLIER", bno: bnoValue},
+            function (result) {
+                 alert("RESULT : " + result);
+            }
+        ); 
+     --%>
+    
+    // 현재 열람중인 get 페이지가 가지고 있는 댓글 목록을 console 에 출력한다. 
+    replyService.getList({bno: bnoValue, page:1}, function(list) {
+
+        for(let i=0, len = list.length||0; i<len; i++) {
+            console.log(list[i]);
         }
-    );
+
+    })
+
+    // 첫 번째 param 과 같은 rno 를 가진 댓글을 삭제한다.
+    <%-- replyService.remove(9, function (cnt) {
+        console.log(cnt);
+
+        if (cnt == "success") {
+            alert("삭제되었습니다");
+        }
+    }, function (err) {
+        alert("ERROR........");
+    }); --%>
+    
 </script>
 
 <script type="text/javascript">
