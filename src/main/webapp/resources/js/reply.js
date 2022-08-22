@@ -58,9 +58,44 @@ let replyService = (function () {
         });
     }
 
+    function update(reply,callback, error) {
+
+        console.log("RNO : " + reply.rno);
+
+        $.ajax({
+            type: "PUT",
+            url: "/replies/" + reply.rno + ".json",
+            data: JSON.stringify(reply),
+            dataType: "application/json; charset=utf-8",
+            success: function(xhr, status, err) {
+                if (error) {
+                    error(err);
+                }
+            }
+        });
+
+    }
+
+    function get(rno, callback, error) {
+
+        $.get("/replies/" + rno + ".json", function(result) {
+
+            if (callback) {
+                callback(result);
+            }
+        }).fail(function(xhr, status, err) {
+            if (error) {
+                error(err);
+            }
+        })
+
+    }
+
     return {
         add: add,
         getList: getList,
-        remove: remove
+        remove: remove,
+        update: update,
+        get: get
     };
 })();

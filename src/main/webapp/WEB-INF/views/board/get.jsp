@@ -98,6 +98,15 @@
     }, function (err) {
         alert("ERROR........");
     }); --%>
+
+    replyService.update({rno : 4, bno: bnoValue, reply: "============MODIFIED============"},
+        function (result) {
+            alert("수정완료" + result);
+    })
+
+    replyService.get(4, function (data) {
+        console.log(data);
+    });
     
 </script>
 
