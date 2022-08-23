@@ -41,9 +41,11 @@
                 </div>
 
                 <button data-oper="modify" class="btn btn-default"
-                onclick="location.href='/board/modify?bno=<c:out value="${board.bno}"/>'">MODIFY</button>
+                        onclick="location.href='/board/modify?bno=<c:out value="${board.bno}"/>'">MODIFY
+                </button>
                 <button data-oper="list" class="btn btn-info"
-                onclick="location.href='/board/list'">LIST</button>
+                        onclick="location.href='/board/list'">LIST
+                </button>
 
                 <form id="operForm" action="/board/modify" method="get">
                     <input type="hidden" id="bno" name="bno" value="<c:out value="${board.bno}"/>"/>
@@ -64,71 +66,129 @@
 </div>
 <%-- /.row --%>
 
-<script type="text/javascript" src="/resources/js/reply.js"></script>
-<script>
+<%-- reply area start --%>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-comments fa-fw"></i> Reply
+            </div>
 
-    // bno 값
-    let bnoValue = '<c:out value="${board.bno}"/>';
+            <div class="panel-body">
+                <%--  start ul  --%>
+                <ul class="chat">
+                    <%-- reply start --%>
+                    <li class="left clearfix" data-rno="21">
+                        <div>
+                            <div class="header">
+                                <strong class="primary-font">user00</strong>
+                                <small class="pull-right text-muted">2022-08-23 22:22</small>
+                            </div>
+                            <p>TEST REPLY</p>
+                        </div>
+                    </li>
+                    <%-- reply end --%>
+                </ul>
+                <%--  end ul --%>
+            </div>
+            <%-- panel chat-panel --%>
+        </div>
+        <%-- row end --%>
+    </div>
+    <%-- reply area end --%>
 
-    // replyService.add() 테스트용.
-    <%-- replyService.add(
-            {reply: "TEST REPL", replier: "TEST REPLIER", bno: bnoValue},
-            function (result) {
-                 alert("RESULT : " + result);
+    <script type="text/javascript" src="/resources/js/reply.js">
+        $(document).ready(function () {
+
+            let bnoValue = '<c:out value="${board.bno}"/>';
+            let replyUL = $(".chat");
+
+            showList(1);
+
+            function showList(page) {
+
+                replyService.getList({bno: bnoValue, page: page || 1}, function (list) {
+                    let str = "";
+                    if (list == null || list.length == 0) {
+                        replyUL.html("");
+
+                        return;
+                    }
+                    for (let i = 0,len = list.length || 0; i < len; i++) {
+                        str += "<li class='left clearfix' data-rno='"+list[i].rno+"'>";
+                        str += "<div><div class='header'><strong class='primary-font'>"+list[i].replier+"</strong>";
+                        str += "<small class='pull-right text-muted'>"+replyService.displayTime(list[i].replyDate)+"</small></div>";
+                        str += "<p>"+list[i].reply+"</p></div></li>";
+                    }
+                    replyUL.html(str);
+                });
+            } // function end
+        });
+    </script>
+
+    <script>
+        // bno 값
+        let bnoValue = '<c:out value="${board.bno}"/>';
+
+        // replyService.add() 테스트용.
+        <%-- replyService.add(
+                {reply: "TEST REPL", replier: "TEST REPLIER", bno: bnoValue},
+                function (result) {
+                     alert("RESULT : " + result);
+                }
+            );
+         --%>
+
+        // 현재 열람중인 get 페이지가 가지고 있는 댓글 목록을 console 에 출력한다.
+        replyService.getList({bno: bnoValue, page: 1}, function (list) {
+
+            for (let i = 0, len = list.length || 0; i < len; i++) {
+                console.log(list[i]);
             }
-        ); 
-     --%>
-    
-    // 현재 열람중인 get 페이지가 가지고 있는 댓글 목록을 console 에 출력한다. 
-    replyService.getList({bno: bnoValue, page:1}, function(list) {
 
-        for(let i=0, len = list.length||0; i<len; i++) {
-            console.log(list[i]);
-        }
+        })
 
-    })
+        // 첫 번째 param 과 같은 rno 를 가진 댓글을 삭제한다.
+        <%-- replyService.remove(9, function (cnt) {
+            console.log(cnt);
 
-    // 첫 번째 param 과 같은 rno 를 가진 댓글을 삭제한다.
-    <%-- replyService.remove(9, function (cnt) {
-        console.log(cnt);
+            if (cnt == "success") {
+                alert("삭제되었습니다");
+            }
+        }, function (err) {
+            alert("ERROR........");
+        }); --%>
 
-        if (cnt == "success") {
-            alert("삭제되었습니다");
-        }
-    }, function (err) {
-        alert("ERROR........");
-    }); --%>
+       /* replyService.update({rno: 4, bno: bnoValue, reply: "============MODIFIED============"},
+            function (result) {
+                alert("수정완료" + result);
+            })
 
-    replyService.update({rno : 4, bno: bnoValue, reply: "============MODIFIED============"},
-        function (result) {
-            alert("수정완료" + result);
-    })
+        replyService.get(4, function (data) {
+            console.log(data);
+        });
+*/
+    </script>
 
-    replyService.get(4, function (data) {
-        console.log(data);
-    });
-    
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-<script type="text/javascript">
-    $(document).ready(function () {
+            let operForm = $("#operForm");
 
-       let operForm = $("#operForm");
+            $("button[data-oper='modify']").on("click", function (e) {
 
-       $("button[data-oper='modify']").on("click", function (e) {
+                operForm.attr("action", "/board/modify").submit();
 
-           operForm.attr("action", "/board/modify").submit();
+            });
 
-       });
+            $("button[data-oper='list']").on("click", function () {
 
-       $("button[data-oper='list']").on("click", function() {
+                operForm.find("#bno").remove();
+                operForm.attr("action", "/board/list");
+                operForm.submit();
 
-           operForm.find("#bno").remove();
-           operForm.attr("action", "/board/list");
-           operForm.submit();
+            });
 
         });
-
-    });
-</script>
+    </script>
 <%@ include file="../includes/footer.jsp" %>
