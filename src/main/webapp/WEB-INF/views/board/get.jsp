@@ -97,7 +97,11 @@
     </div>
     <%-- reply area end --%>
 
-    <script type="text/javascript" src="/resources/js/reply.js">
+    <%-- 반드시 jsp 내에서 굴릴 script 이전에 이하 src 가 있는 script 를 먼저 작성한 후,
+     이하에서 새로 script 탭을 작성하여 진행해야 작동한다. 이게 없으면 작동하질 않음 20220824 --%>
+    <script type="text/javascript" src="/resources/js/reply.js"></script>
+
+    <script>
         $(document).ready(function () {
 
             let bnoValue = '<c:out value="${board.bno}"/>';
@@ -121,8 +125,8 @@
                         str += "<p>"+list[i].reply+"</p></div></li>";
                     }
                     replyUL.html(str);
-                });
-            } // function end
+                }); // function end
+            } // showList end
         });
     </script>
 
