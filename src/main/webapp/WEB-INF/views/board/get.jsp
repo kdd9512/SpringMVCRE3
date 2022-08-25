@@ -69,10 +69,15 @@
 <%-- reply area start --%>
 <div class="row">
     <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-comments fa-fw"></i> Reply
-            </div>
+<%--        <div class="panel panel-default">--%>
+        <%--            <div class="panel-heading">--%>
+        <%--                <i class="fa fa-comments fa-fw"></i> Reply--%>
+        <%--            </div>--%>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-comments fa-fw"></i> Reply
+                    <button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>
+                </div>
 
             <div class="panel-body">
                 <%--  start ul  --%>
@@ -96,11 +101,45 @@
         <%-- row end --%>
     </div>
     <%-- reply area end --%>
+    <%-- Modal --%>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Reply Modal</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Reply</label>
+                        <input class="form-control" name="reply" value="NEW REPLY"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Replier</label>
+                        <input class="form-control" name="replier" value="REPLIER"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Reply Date</label>
+                        <input class="form-control" name="replyDate" value=""/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modalModBtn" class="btn btn-warning">Modify</button>
+                    <button type="button" id="modalRemoveBtn" class="btn btn-danger">Remove</button>
+                    <button type="submit" id="modalRegisterBtn" class="btn btn-default">Register</button>
+                    <button type="button" id="modalClassBtn" class="btn btn-info" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <%-- /.modal content end --%>
+        </div>
+        <%-- /.modal dialog end --%>
+    </div>
+    <%-- /.Modal end --%>
 
     <%-- 반드시 jsp 내에서 굴릴 script 이전에 이하 src 가 있는 script 를 먼저 작성한 후,
      이하에서 새로 script 탭을 작성하여 진행해야 작동한다. 이게 없으면 작동하질 않음 20220824 --%>
     <script type="text/javascript" src="/resources/js/reply.js"></script>
-
     <script>
         $(document).ready(function () {
 
@@ -127,6 +166,32 @@
                     replyUL.html(str);
                 }); // function end
             } // showList end
+
+            // modal 내의 모든 button 목록. 일단 다 불러와야 기능을 부여할 수 있으므로..
+            let modal = $(".modal");
+            let modalInputReply = modal.find("input[name='reply']");
+            let modalInputReplier = modal.find("input[name='replier']");
+            let modalInputReplyDate = modal.find("input[name='replyDate']");
+
+            let modalModBtn = $("#modalModBtn");
+            let modalRemoveBtn = $("#modalRemoveBtn");
+            let modalRegisterBtn = $("#modalRegisterBtn");
+
+            // 필요없는 버튼을 숨김처리하기 위한 script.
+            $("#addReplyBtn").on("click", function(e) {
+
+                modal.find("input").val("");
+                modalInputReplyDate.closest("div").hide();
+                modal.find("button[id != 'modalCloseBtn']").hide();
+
+                modalRegisterBtn.show();
+
+                $(".modal").modal("show");
+
+            })
+
+
+
         });
     </script>
 
