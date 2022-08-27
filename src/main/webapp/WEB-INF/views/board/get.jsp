@@ -190,7 +190,77 @@
 
             })
 
+            modalRegisterBtn.on("click", function() {
 
+                let reply = {
+                    reply: modalInputReply.val(),
+                    replier: modalInputReplier.val(),
+                    bno:bnoValue
+                };
+
+                replyService.add(reply, function (result) {
+                    // 댓글을 쓴 후 성공/실패 여부를 알림 & 성공한 경우 input 창을 비우고 modal 을 닫음.
+                    alert(result);
+
+                    modal.find("input").val("");
+                    modal.modal("hide");
+
+                    // 댓글 등록 후 목록을 다시 불러온다
+                    showList(1);
+
+                });
+
+            });
+
+            // 기존 댓글을 수정한다.
+            $(".chat").on("click", "li", function () {
+
+                let rno = $(this).data("rno");
+                replyService.get(rno, function (reply) {
+                    // input 태그의 값을 가져와서 초기값으로 입력.
+                    modalInputReply.val(reply.reply);
+                    modalInputReplier.val(reply.replier);
+                    // 작성날짜는 바꾸면 안되므로 readonly 처리.
+                    modalInputReplyDate.val(replyService.displayTime( reply.replyDate)).attr("readonly", "readonly");
+                    modal.data("rno", reply.rno);
+
+                    // modalCloseBtn 을 hide & Modify / Remove 버튼을 show
+                    modal.find("button[id != 'modalCloseBtn']").hide();
+                    modalModBtn.show();
+                    modalRemoveBtn.show();
+
+                    $(".modal").modal("show");
+                })
+            });
+
+            // 수정 버튼 event
+            modalModBtn.on("click", function (e) {
+
+                let reply = {
+                    rno: modal.data("rno"),
+                    reply: modalInputReply.val()};
+
+                // 수정 후 modal 을 닫고 목록 새로고침.
+                replyService.update(reply, function (result) {
+                    alert(result);
+                    modal.modal("hide");
+                    showList(1);
+                });
+
+            });
+
+            modalRemoveBtn.on("click", function (e) {
+
+                let rno = modal.data("rno");
+
+                replyService.remove(rno, function(result) {
+                    // 수정 후 modal 을 닫고 목록 새로고침.
+                    alert(result);
+                    modal.modal("hide");
+                    showList(1);
+                });
+
+            });
 
         });
     </script>
@@ -209,13 +279,13 @@
          --%>
 
         // 현재 열람중인 get 페이지가 가지고 있는 댓글 목록을 console 에 출력한다.
-        replyService.getList({bno: bnoValue, page: 1}, function (list) {
-
-            for (let i = 0, len = list.length || 0; i < len; i++) {
-                console.log(list[i]);
-            }
-
-        })
+        // replyService.getList({bno: bnoValue, page: 1}, function (list) {
+        //
+        //     for (let i = 0, len = list.length || 0; i < len; i++) {
+        //         console.log(list[i]);
+        //     }
+        //
+        // })
 
         // 첫 번째 param 과 같은 rno 를 가진 댓글을 삭제한다.
         <%-- replyService.remove(9, function (cnt) {
