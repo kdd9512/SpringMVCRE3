@@ -67,7 +67,12 @@ let replyService = (function () {
             url: "/replies/" + reply.rno,
             data: JSON.stringify(reply),
             contentType: "application/json; charset=utf-8",
-            success: function(xhr, status, err) {
+            success: function (updateResult, status, xhr) {
+                if (callback) {
+                    callback(updateResult);
+                }
+            },
+            error: function (xhr, status, err) {
                 if (error) {
                     error(err);
                 }
