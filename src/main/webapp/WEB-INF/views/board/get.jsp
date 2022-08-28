@@ -58,26 +58,22 @@
                 </form>
 
             </div>
-            <%-- panel-body --%>
+            <%-- .panel-body --%>
         </div>
-        <%-- panel-body --%>
+        <%-- .panel-body --%>
     </div>
-    <%-- panel --%>
+    <%-- .panel --%>
 </div>
 <%-- /.row --%>
 
 <%-- reply area start --%>
 <div class="row">
     <div class="col-lg-12">
-<%--        <div class="panel panel-default">--%>
-        <%--            <div class="panel-heading">--%>
-        <%--                <i class="fa fa-comments fa-fw"></i> Reply--%>
-        <%--            </div>--%>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-comments fa-fw"></i> Reply
-                    <button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-comments fa-fw"></i> Reply
+                <button id="addReplyBtn" class="btn btn-primary btn-xs pull-right">New Reply</button>
+            </div>
 
             <div class="panel-body">
                 <%--  start ul  --%>
@@ -96,7 +92,9 @@
                 </ul>
                 <%--  end ul --%>
             </div>
-            <%-- panel chat-panel --%>
+            <%-- .panel chat-panel --%>
+            <div class="panel-footer"></div>
+            <%-- .panel-footer --%>
         </div>
         <%-- row end --%>
     </div>
@@ -150,18 +148,29 @@
 
             function showList(page) {
 
-                replyService.getList({bno: bnoValue, page: page || 1}, function (list) {
+                replyService.getList({bno: bnoValue, page: page || 1}, function (replyCnt, list) {
+
+                    console.log("reply Cnt : " + replyCnt);
+                    console.log("list : " + list);
+
+                    // 페이지 번호가 -1 인 경우에 마지막 페이지를 찾아다 호출한다.
+                    if (page == -1) {
+                        let pageNum = Math.ceil(replyCnt / 10.0);
+                        showList(pageNum);
+                        return;
+                    }
+
                     let str = "";
                     if (list == null || list.length == 0) {
                         replyUL.html("");
 
                         return;
                     }
-                    for (let i = 0,len = list.length || 0; i < len; i++) {
-                        str += "<li class='left clearfix' data-rno='"+list[i].rno+"'>";
-                        str += "<div><div class='header'><strong class='primary-font'>"+list[i].replier+"</strong>";
-                        str += "<small class='pull-right text-muted'>"+replyService.displayTime(list[i].replyDate)+"</small></div>";
-                        str += "<p>"+list[i].reply+"</p></div></li>";
+                    for (let i = 0, len = list.length || 0; i < len; i++) {
+                        str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
+                        str += "<div><div class='header'><strong class='primary-font'>" + list[i].replier + "</strong>";
+                        str += "<small class='pull-right text-muted'>" + replyService.displayTime(list[i].replyDate) + "</small></div>";
+                        str += "<p>" + list[i].reply + "</p></div></li>";
                     }
                     replyUL.html(str);
                 }); // function end
@@ -178,7 +187,7 @@
             let modalRegisterBtn = $("#modalRegisterBtn");
 
             // 필요없는 버튼을 숨김처리하기 위한 script.
-            $("#addReplyBtn").on("click", function(e) {
+            $("#addReplyBtn").on("click", function (e) {
 
                 modal.find("input").val("");
                 modalInputReplyDate.closest("div").hide();
@@ -190,12 +199,12 @@
 
             })
 
-            modalRegisterBtn.on("click", function() {
+            modalRegisterBtn.on("click", function () {
 
                 let reply = {
                     reply: modalInputReply.val(),
                     replier: modalInputReplier.val(),
-                    bno:bnoValue
+                    bno: bnoValue
                 };
 
                 replyService.add(reply, function (result) {
@@ -206,7 +215,10 @@
                     modal.modal("hide");
 
                     // 댓글 등록 후 목록을 다시 불러온다
-                    showList(1);
+                    // ** -1 을 param 으로 넣는 이유는?
+                    // -> 새 댓글을 추가할 시 먼저 전체 댓글의 숫자를 파악하고 마지막 페이지를 호출하여 이동시키기 위함.
+
+                    showList(-1);
 
                 });
 
@@ -221,7 +233,7 @@
                     modalInputReply.val(reply.reply);
                     modalInputReplier.val(reply.replier);
                     // 작성날짜는 바꾸면 안되므로 readonly 처리.
-                    modalInputReplyDate.val(replyService.displayTime( reply.replyDate)).attr("readonly", "readonly");
+                    modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly", "readonly");
                     modal.data("rno", reply.rno);
 
                     // modalCloseBtn 을 hide & Modify / Remove 버튼을 show
@@ -238,7 +250,8 @@
 
                 let reply = {
                     rno: modal.data("rno"),
-                    reply: modalInputReply.val()};
+                    reply: modalInputReply.val()
+                };
 
                 // 수정 후 modal 을 닫고 목록 새로고침.
                 replyService.update(reply, function (result) {
@@ -253,7 +266,7 @@
 
                 let rno = modal.data("rno");
 
-                replyService.remove(rno, function(result) {
+                replyService.remove(rno, function (result) {
                     // 수정 후 modal 을 닫고 목록 새로고침.
                     alert(result);
                     modal.modal("hide");
@@ -298,15 +311,15 @@
             alert("ERROR........");
         }); --%>
 
-       /* replyService.update({rno: 4, bno: bnoValue, reply: "============MODIFIED============"},
-            function (result) {
-                alert("수정완료" + result);
-            })
+        /* replyService.update({rno: 4, bno: bnoValue, reply: "============MODIFIED============"},
+             function (result) {
+                 alert("수정완료" + result);
+             })
 
-        replyService.get(4, function (data) {
-            console.log(data);
-        });
-*/
+         replyService.get(4, function (data) {
+             console.log(data);
+         });
+ */
     </script>
 
     <script type="text/javascript">

@@ -1,6 +1,7 @@
 package com.kdd9512.SpringMVCRE3.service;
 
 import com.kdd9512.SpringMVCRE3.domain.Criteria;
+import com.kdd9512.SpringMVCRE3.domain.ReplyPageDTO;
 import com.kdd9512.SpringMVCRE3.domain.ReplyVO;
 import com.kdd9512.SpringMVCRE3.mapper.ReplyMapper;
 import lombok.Setter;
@@ -57,12 +58,17 @@ public class ReplyServiceImpl implements ReplyService{
         return mapper.delete(rno);
     }
 
+    // 댓글 목록과 댓글 페이지 개수를 return
     @Override
-    public List<ReplyVO> getList(Criteria cri, Long bno) {
+    public ReplyPageDTO getList(Criteria cri, Long bno) {
 
         log.info("==========================");
         log.info("GET REPLY LIST : [CRI: " + cri + ", BNO : " + bno + " ]");
 
-        return mapper.getListWithPaging(cri, bno);
+        return new ReplyPageDTO(
+                mapper.getCountByBno(bno),
+                mapper.getListWithPaging(cri, bno));
     }
+
+
 }

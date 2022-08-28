@@ -31,7 +31,8 @@ let replyService = (function () {
         $.getJSON("/replies/pages/" + bno + "/" + page + ".json",
             function (data) {
                 if (callback) {
-                    callback(data);
+                    // callback(data); -- 댓글 목록만을 가져온다.
+                    callback(data.replyCnt, data.list); // 댓글 숫자와 목록을 가져온다
                 }
             }
         ).fail(function (xhr, status, err) {
@@ -62,6 +63,9 @@ let replyService = (function () {
 
         console.log("RNO : " + reply.rno);
 
+        // 20220827 modalModBtn update 이하 작동 안하던 문제.
+        // 원인 : success 의 callback 을 return 하지 않아서...
+        // (저게 있어야 success / fail 을 전송한다)
         $.ajax({
             type: "PUT",
             url: "/replies/" + reply.rno,
@@ -70,6 +74,7 @@ let replyService = (function () {
             success: function (updateResult, status, xhr) {
                 if (callback) {
                     callback(updateResult);
+                    console.log("RESULT? : " + updateResult);
                 }
             },
             error: function (xhr, status, err) {

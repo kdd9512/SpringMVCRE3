@@ -46,9 +46,28 @@
                replier,
                replyDate,
                updateDate
-        from tbl_reply
-        where bno = #{bno}
-        order by rno asc
+        from (
+                 select /* INDEX(tbl_reply idx_reply) */
+                     rownum rn,
+                     bno,
+                     rno,
+                     reply,
+                     replier,
+                     replyDate,
+                     updateDate
+                 from tbl_reply
+                 where bno = #{bno}
+                   and rno > 0
+                   and rownum <= #{cri.pageNum} * #{cri.amount}
+            )
+        where
+              rn > (#{cri.pageNum} - 1) * #{cri.amount}
+        ]]>
+    </select>
+
+    <select id="getCountByBno" resultType="int">
+        <![CDATA[
+            select count(rno) from tbl_reply where bno = #{bno}
         ]]>
     </select>
 
