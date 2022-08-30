@@ -258,7 +258,7 @@
                 replyService.update(reply, function (result) {
                     alert(result);
                     modal.modal("hide");
-                    showList(1);
+                    showList(pageNum);
                 });
 
             });
@@ -271,12 +271,12 @@
                     // 수정 후 modal 을 닫고 목록 새로고침.
                     alert(result);
                     modal.modal("hide");
-                    showList(1);
+                    showList(pageNum);
                 });
 
             });
 
-            let pageNum = 1;
+            let pageNum = 1; // 페이지 개수
             let replyPageFooter = $(".panel-footer");
 
             function showReplyPage(replyCnt) {
